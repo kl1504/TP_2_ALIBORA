@@ -1,6 +1,0 @@
-# logstash/config/pipelines.yml
-
-- pipeline.id: main
-  path.config: "/usr/share/logstash/pipeline/main.conf"
-  pipeline.workers: 2
-  pipeline.batch.size: 125

@@ -33,12 +33,16 @@ services:
     depends_on:
       - elasticsearch
     restart: unless-stopped
+    tty: true
+    stdin_open: true
     environment:
       - LS_JAVA_OPTS=-Xms512m -Xmx512m
+      - API_HTTP_HOST=0.0.0.0
+      - XPACK_MONITORING_ENABLED=false
     volumes:
-      - ../logstash/pipeline/:/usr/share/logstash/pipeline/:ro
-      - ../logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - ../logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+      - ./logstash/pipeline/:/usr/share/logstash/pipeline/:ro
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
     ports:
       - "5044:5044"
       - "9600:9600"
