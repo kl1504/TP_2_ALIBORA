@@ -1,0 +1,9 @@
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+output.elasticsearch:
+  hosts: ["http://127.0.0.1:5044"]
+
+setup.kibana:
+  host: "http://127.0.0.1:5601"

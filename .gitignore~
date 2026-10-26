@@ -1,0 +1,12 @@
+secrets/
+*.env
+
+# Fichiers de sauvegarde d'éditeur
+*~
+*.swp
+
+# Binaires lourds (à télécharger via Dockerfile/script, pas à versionner)
+*.deb
+
+# Divers
+.DS_Store

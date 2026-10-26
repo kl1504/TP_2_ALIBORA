@@ -1,0 +1,73 @@
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  prometheus_data: {}
+  alertmanager_data: {}
+  grafana_data: {}
+
+services:
+  node-exporter:
+    image: prom/node-exporter:v1.12.1
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - "9100:9100"
+    networks: [monitoring]
+
+  prometheus:
+    image: prom/prometheus:v3.15.0
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./TP_2_ALIBORA/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./TP_2_ALIBORA/alerts-rules.yml:/etc/prometheus/test_alerts.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    networks: [monitoring]
+
+  alertmanager:
+    image: prom/alertmanager:v0.28.0
+    container_name: alertmanager
+    restart: unless-stopped
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ./secrets/smtp_password:/etc/alertmanager/smtp_password:ro
+      - alertmanager_data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9095'
+      - '--cluster.listen-address='
+    ports:
+      - "127.0.0.1:9095:9093"
+    networks: [monitoring]
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter:v0.28.0
+    container_name: blackbox-exporter
+    restart: unless-stopped
+    volumes:
+      - ./TP_2_ALIBORA/blackbox.yml:/config/blackbox.yml:ro
+    ports:
+      - "9115:9115"
+    networks: [monitoring]
+
+  

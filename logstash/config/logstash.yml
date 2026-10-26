@@ -1,0 +1,9 @@
+api.http.host: "0.0.0.0"
+api.http.port: 9600
+
+config.reload.automatic: true
+config.reload.interval: 3s
+
+log.level: info
+
+monitoring.enabled: false

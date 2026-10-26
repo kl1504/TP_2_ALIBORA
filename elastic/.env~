@@ -1,0 +1,5 @@
+# Copie ce fichier en .env et remplis les vraies valeurs.
+# Le .env réel ne doit JAMAIS être commité (voir .gitignore).
+ELASTIC_PASSWORD=
+KIBANA_PASSWORD=
+STACK_VERSION=8.11.0
